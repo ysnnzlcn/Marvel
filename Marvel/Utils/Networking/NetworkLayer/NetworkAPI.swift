@@ -10,10 +10,11 @@ import Alamofire
 
 public enum NetworkAPI {
     
-    case getHeroes
+    case getHeroes(_ request: GetHeroesRequest)
+    case getComicsOfHero(_ heroId: Int, _ request: GetComicsRequest)
     
     private var baseURL: String {
-        ""
+        "https://gateway.marvel.com/v1/public/"
     }
     
     var url: String {
@@ -21,7 +22,10 @@ public enum NetworkAPI {
         
         switch self {
         case .getHeroes:
-            path = ""
+            path = "characters"
+            
+        case .getComicsOfHero(let heroId, _):
+            path = "characters/\(heroId)/comics"
         }
         
         return baseURL + path
@@ -29,15 +33,18 @@ public enum NetworkAPI {
     
     var method: HTTPMethod {
         switch self {
-        case .getHeroes:
+        case .getHeroes, .getComicsOfHero:
             return .get
         }
     }
     
     var parameters: [String: Any]? {
         switch self {
-        case .getHeroes:
-            return nil
+        case .getHeroes(let request):
+            return request.dict
+            
+        case .getComicsOfHero(_, let request):
+            return request.dict
         }
     }
     

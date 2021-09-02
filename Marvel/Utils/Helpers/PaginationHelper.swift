@@ -11,15 +11,24 @@ public final class PaginationHelper {
     
     // MARK: Private Variables
     
-    private var totalPageCount = 1
+    private var totalHeroCount = 1
     
     // MARK: Public Read-Only Variables
     
-    public private(set) var currentPage = 0
-    public var nextPageNumberToFetch: Int { currentPage + 1 }
+    public let limit: Int
+    public private(set) var currentOffset = 0
     public var shouldFetchNextPage: Bool {
-        currentPage < totalPageCount
+        currentOffset < totalHeroCount
+    }
+    
+    public init(limit: Int) {
+        self.limit = limit
     }
     
     // MARK: Public Methods
+    
+    public func nextPageFetched(count: Int, total: Int) {
+        currentOffset += count
+        totalHeroCount = total
+    }
 }
